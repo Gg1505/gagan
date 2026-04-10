@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gagan Gowda — Solar & Renewable Energy Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --g0:#030f08;--g1:#061a10;--g2:#0a3d2e;--g3:#1a6b4a;
+  --gb:#2ecc87;--gl:#a8f0d0;
+  --sg:#f5a623;--sa:#e87c1e;
+  --w:#ffffff;
+  --fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--g0);color:var(--w);overflow-x:hidden;}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3.5rem;
+  background:rgba(3,15,8,0.75);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(46,204,135,0.12);
+}
+.nav-logo{font-family:var(--fd);font-size:1.2rem;font-weight:800;color:var(--gb);letter-spacing:-.02em;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;
+  font-weight:500;letter-spacing:.04em;transition:color .25s;position:relative;
+}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gb);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.nav-links a:hover{color:var(--gb);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-cta{background:var(--sg)!important;color:var(--g0)!important;font-weight:600!important;padding:.45rem 1.4rem;border-radius:100px;transition:all .25s!important;}
+.nav-cta:hover{background:#ffd060!important;transform:translateY(-2px)!important;}
+.nav-cta::after{display:none!important;}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;z-index:1;display:flex;align-items:center;padding:8rem 3.5rem 4rem;overflow:hidden;}
+#hero-canvas{position:absolute;right:0;top:0;bottom:0;width:56%;pointer-events:none;}
+.hero-left{position:relative;z-index:2;max-width:620px;}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(46,204,135,.1);border:1px solid rgba(46,204,135,.3);
+  color:var(--gb);font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:.4rem 1.1rem;border-radius:100px;margin-bottom:2rem;
+  opacity:0;animation:riseUp .7s .2s ease forwards;
+}
+.dot-pulse{width:7px;height:7px;border-radius:50%;background:var(--gb);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(1.6);}}
+.hero-name{
+  font-family:var(--fd);font-size:clamp(3.2rem,7.5vw,6.2rem);
+  font-weight:800;line-height:.93;letter-spacing:-.03em;color:var(--w);
+  opacity:0;animation:riseUp .7s .35s ease forwards;
+}
+.hero-name .accent{color:var(--gb);}
+.hero-role{
+  font-size:clamp(.9rem,1.8vw,1.1rem);color:rgba(255,255,255,.42);
+  font-weight:300;margin:1.2rem 0 2rem;line-height:1.6;max-width:480px;
+  opacity:0;animation:riseUp .7s .5s ease forwards;
+}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:riseUp .7s .65s ease forwards;}
+.btn-solar{
+  background:var(--sg);color:var(--g0);padding:.9rem 2rem;border-radius:100px;
+  font-weight:600;font-size:.95rem;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;
+  transition:all .3s;box-shadow:0 0 30px rgba(245,166,35,.3);
+}
+.btn-solar:hover{transform:translateY(-3px);box-shadow:0 0 55px rgba(245,166,35,.5);}
+.btn-outline{
+  border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);
+  padding:.9rem 2rem;border-radius:100px;font-weight:400;font-size:.95rem;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .3s;
+}
+.btn-outline:hover{border-color:var(--gb);color:var(--gb);transform:translateY(-3px);}
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  opacity:0;animation:riseUp .7s 1.3s ease forwards;z-index:2;
+}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gb),transparent);animation:scrlPulse 2s infinite;}
+.scroll-lbl{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);}
+@keyframes scrlPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes riseUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* SHARED */
+section{position:relative;z-index:1;padding:7rem 3.5rem;}
+.eye{font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gb);margin-bottom:.6rem;display:flex;align-items:center;gap:.7rem;}
+.eye::before{content:'';width:30px;height:2px;background:var(--sg);}
+.stitle{font-family:var(--fd);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--w);margin-bottom:1rem;}
+.ssub{font-size:.97rem;color:rgba(255,255,255,.4);line-height:1.75;max-width:520px;margin-bottom:3.5rem;}
+
+/* ABOUT */
+#about{background:linear-gradient(160deg,var(--g0),var(--g1));}
+.about-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:center;}
+.cube-wrap{perspective:900px;display:flex;justify-content:center;margin-bottom:2rem;}
+.cube{
+  width:200px;height:200px;position:relative;transform-style:preserve-3d;
+  animation:cubeAnim 16s ease-in-out infinite;
+}
+@keyframes cubeAnim{
+  0%{transform:rotateX(12deg) rotateY(0deg);}
+  25%{transform:rotateX(18deg) rotateY(90deg) translateY(-10px);}
+  50%{transform:rotateX(12deg) rotateY(180deg);}
+  75%{transform:rotateX(6deg) rotateY(270deg) translateY(-10px);}
+  100%{transform:rotateX(12deg) rotateY(360deg);}
+}
+.cf{
+  position:absolute;width:200px;height:200px;
+  display:flex;align-items:center;justify-content:center;font-size:3rem;
+  border:1px solid rgba(46,204,135,.25);backface-visibility:hidden;
+}
+.cf-fr{background:rgba(10,61,46,.85);transform:translateZ(100px);}
+.cf-bk{background:rgba(26,107,74,.8);transform:rotateY(180deg) translateZ(100px);}
+.cf-lt{background:rgba(6,26,16,.85);transform:rotateY(-90deg) translateZ(100px);}
+.cf-rt{background:rgba(6,26,16,.85);transform:rotateY(90deg) translateZ(100px);}
+.cf-tp{background:rgba(46,204,135,.1);transform:rotateX(90deg) translateZ(100px);}
+.cf-bt{background:rgba(3,15,8,.9);transform:rotateX(-90deg) translateZ(100px);}
+
+.a-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.astat{
+  background:rgba(255,255,255,.04);border:1px solid rgba(46,204,135,.14);
+  border-radius:14px;padding:1rem 1.1rem;transition:all .3s;
+}
+.astat:hover{background:rgba(46,204,135,.07);border-color:rgba(46,204,135,.4);transform:translateY(-4px);}
+.astat-v{font-family:var(--fd);font-size:1.7rem;font-weight:800;color:var(--gb);line-height:1;}
+.astat-l{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:3px;}
+.about-p{font-size:.95rem;line-height:1.85;color:rgba(255,255,255,.58);margin-bottom:1.1rem;}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:1.5rem;}
+.tg{
+  background:rgba(46,204,135,.09);border:1px solid rgba(46,204,135,.2);
+  color:var(--gb);font-size:.73rem;font-weight:500;padding:5px 13px;
+  border-radius:100px;transition:all .25s;cursor:default;
+}
+.tg:hover{background:rgba(46,204,135,.2);transform:translateY(-2px);}
+.tg.go{background:rgba(245,166,35,.09);border-color:rgba(245,166,35,.22);color:var(--sg);}
+.tg.go:hover{background:rgba(245,166,35,.2);}
+
+/* PROJECTS */
+#projects{background:var(--g1);}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem;max-width:1200px;margin:0 auto;}
+.pcard{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:24px;padding:2rem;position:relative;overflow:hidden;
+  transition:border-color .4s,box-shadow .4s;cursor:default;
+}
+.pcard-glow{
+  position:absolute;top:-50px;right:-50px;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,204,135,.1),transparent 70%);
+  transition:transform .5s;pointer-events:none;
+}
+.pcard:hover .pcard-glow{transform:scale(1.8);}
+.pcard:hover{border-color:rgba(46,204,135,.35);box-shadow:0 30px 70px rgba(0,0,0,.4),0 0 40px rgba(46,204,135,.08);}
+.pcard-stripe{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gb),var(--sg));
+  transform:scaleX(0);transform-origin:left;transition:transform .45s;
+}
+.pcard:hover .pcard-stripe{transform:scaleX(1);}
+.pico{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:1.2rem;position:relative;z-index:1;}
+.pia{background:rgba(245,166,35,.14);}
+.pib{background:rgba(46,204,135,.14);}
+.pic{background:rgba(168,240,208,.1);}
+.pid{background:rgba(232,124,30,.14);}
+.ptitle{font-family:var(--fd);font-size:1.07rem;font-weight:700;color:var(--w);margin-bottom:.6rem;line-height:1.35;position:relative;z-index:1;}
+.pdesc{font-size:.87rem;line-height:1.72;color:rgba(255,255,255,.48);margin-bottom:1.2rem;position:relative;z-index:1;}
+.ptags{display:flex;flex-wrap:wrap;gap:6px;position:relative;z-index:1;}
+.ptag{font-size:.69rem;font-weight:500;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.58);}
+.ptag.hl{background:rgba(245,166,35,.14);color:var(--sg);}
+.pnums{display:flex;gap:1.5rem;margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:1;}
+.pnv{font-family:var(--fd);font-size:1.2rem;font-weight:800;color:var(--gb);}
+.pnl{font-size:.67rem;color:rgba(255,255,255,.3);}
+
+/* SKILLS */
+#skills{background:var(--g0);}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.3rem;max-width:1100px;margin:0 auto;}
+.scard{
+  background:rgba(255,255,255,.04);border:1px solid rgba(46,204,135,.1);
+  border-radius:20px;padding:1.8rem;
+  transition:all .35s;
+}
+.scard:hover{
+  border-color:rgba(46,204,135,.38);
+  background:rgba(46,204,135,.055);
+  transform:perspective(600px) rotateX(-5deg) translateY(-8px);
+  box-shadow:0 24px 55px rgba(0,0,0,.3);
+}
+.shead{display:flex;align-items:center;gap:10px;margin-bottom:1.3rem;}
+.sico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.sia{background:rgba(245,166,35,.14);}
+.sib{background:rgba(46,204,135,.14);}
+.sic{background:rgba(168,240,208,.1);}
+.sid{background:rgba(100,180,255,.1);}
+.sname{font-weight:600;font-size:.9rem;color:rgba(255,255,255,.88);}
+.sbars{display:flex;flex-direction:column;gap:10px;}
+.srow{display:flex;justify-content:space-between;margin-bottom:4px;}
+.slbl{font-size:.78rem;color:rgba(255,255,255,.48);}
+.spct{font-size:.7rem;color:rgba(255,255,255,.28);}
+.bbg{height:4px;background:rgba(255,255,255,.06);border-radius:100px;}
+.bfill{height:100%;border-radius:100px;width:0%;background:linear-gradient(90deg,var(--g3),var(--gb));transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+.bfill.go{background:linear-gradient(90deg,var(--sa),var(--sg));}
+
+/* EXPERIENCE */
+#experience{background:linear-gradient(160deg,var(--g1),var(--g0));}
+.ewrap{max-width:900px;margin:0 auto;}
+.tl{position:relative;padding-left:2.5rem;}
+.tl::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:1px;background:linear-gradient(to bottom,var(--gb),rgba(46,204,135,.08));}
+.tlitem{position:relative;margin-bottom:3rem;padding-left:2.5rem;opacity:0;transform:translateX(-22px);transition:all .65s ease;}
+.tlitem.vis{opacity:1;transform:translateX(0);}
+.tldot{
+  position:absolute;left:-2.5rem;top:9px;width:15px;height:15px;border-radius:50%;
+  background:var(--gb);border:3px solid var(--g0);
+  box-shadow:0 0 14px rgba(46,204,135,.55),0 0 32px rgba(46,204,135,.18);
+}
+.tldot.go{background:var(--sg);box-shadow:0 0 14px rgba(245,166,35,.55),0 0 32px rgba(245,166,35,.18);}
+.tltop{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;}
+.tlrole{font-family:var(--fd);font-size:1.12rem;font-weight:700;color:var(--w);}
+.tlbadge{font-size:.72rem;font-weight:600;padding:4px 14px;border-radius:100px;}
+.tlbadge.gr{background:rgba(46,204,135,.14);color:var(--gb);}
+.tlbadge.am{background:rgba(245,166,35,.14);color:var(--sg);}
+.tlorg{font-size:.87rem;color:var(--g3);font-weight:500;margin:4px 0 12px;}
+.tlul{list-style:none;}
+.tlul li{font-size:.9rem;line-height:1.72;color:rgba(255,255,255,.52);padding-left:18px;position:relative;margin-bottom:6px;}
+.tlul li::before{content:'›';position:absolute;left:0;color:var(--gb);}
+
+/* CONTACT */
+#contact{background:var(--g0);border-top:1px solid rgba(46,204,135,.1);padding:4rem 3.5rem;}
+.cbar{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;}
+.cleft h2{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.02em;color:var(--w);line-height:1.1;}
+.cleft h2 span{color:var(--gb);}
+.cleft p{font-size:.92rem;color:rgba(255,255,255,.38);margin-top:.5rem;}
+.clinks{display:flex;gap:.85rem;flex-wrap:wrap;align-items:center;}
+.cl{
+  display:flex;align-items:center;gap:.65rem;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.72);text-decoration:none;font-size:.87rem;
+  padding:.7rem 1.3rem;border-radius:100px;transition:all .3s;
+}
+.cl:hover{background:rgba(46,204,135,.12);border-color:rgba(46,204,135,.4);color:var(--gb);transform:translateY(-3px);}
+.cl.cta{background:var(--sg);border-color:var(--sg);color:var(--g0);font-weight:600;}
+.cl.cta:hover{background:#ffd060;border-color:#ffd060;color:var(--g0);}
+
+footer{background:var(--g0);border-top:1px solid rgba(255,255,255,.05);text-align:center;padding:1.8rem;font-size:.78rem;color:rgba(255,255,255,.2);}
+footer span{color:var(--gb);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:all .75s cubic-bezier(.4,0,.2,1);}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:960px){
+  nav{padding:1rem 1.5rem;}.nav-links{display:none;}
+  section{padding:5rem 1.5rem;}
+  .about-grid{grid-template-columns:1fr;gap:3rem;}
+  #hero-canvas{display:none;}
+  .cbar{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <div class="nav-logo">GG ⚡</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact" class="nav-cta">Contact Me</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-left">
+    <div class="hero-chip"><span class="dot-pulse"></span>Open to Graduate Roles · 2026</div>
+    <h1 class="hero-name">Gagan<br/><span class="accent">Gowda K L</span></h1>
+    <p class="hero-role">Solar PV Engineer · Power Electronics · Energy Data Analytics<br/>MSc Electrical & Electronic Engineering — University of Nottingham</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-solar">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        View My Work
+      </a>
+      <a href="#contact" class="btn-outline">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        Contact Me
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="scroll-lbl">scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="cube-wrap">
+        <div class="cube">
+          <div class="cf cf-fr">☀️</div><div class="cf cf-bk">⚡</div>
+          <div class="cf cf-lt">🔋</div><div class="cf cf-rt">📊</div>
+          <div class="cf cf-tp">🤖</div><div class="cf cf-bt">🌱</div>
+        </div>
+      </div>
+      <div class="a-stats">
+        <div class="astat"><div class="astat-v">5kW</div><div class="astat-l">PV System Designed</div></div>
+        <div class="astat"><div class="astat-v">&lt;1%</div><div class="astat-l">Inverter Sim Error</div></div>
+        <div class="astat"><div class="astat-v">92%</div><div class="astat-l">First-Fix Rate</div></div>
+        <div class="astat"><div class="astat-v">4</div><div class="astat-l">Energy AI Projects</div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="eye">About Me</div>
+      <h2 class="stitle">Engineering the clean energy future</h2>
+      <p class="about-p">I'm a renewable energy engineer with hands-on experience designing solar PV systems, simulating power distribution networks, and applying machine learning to energy challenges — from day-ahead load forecasting to AI-powered fault classification.</p>
+      <p class="about-p">Currently completing my MSc in Electrical & Electronic Engineering at the University of Nottingham, specialising in Power Electronics and Artificial Intelligence. Previously interned at Bosch and Mercedes-Benz developing embedded control systems.</p>
+      <div class="tags">
+        <span class="tg">PLECS</span><span class="tg go">Solar PV</span>
+        <span class="tg">PVGIS</span><span class="tg go">PyTorch</span>
+        <span class="tg">MATLAB</span><span class="tg go">H-Bridge Inverter</span>
+        <span class="tg">Python</span><span class="tg go">Off-Grid Storage</span>
+        <span class="tg">VHDL</span><span class="tg go">Energy Forecasting</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="eye reveal">Featured Projects</div>
+    <h2 class="stitle reveal">What I've built</h2>
+    <p class="ssub reveal">Solar energy systems, power network analysis, and AI-driven analytics for the renewable energy transition.</p>
+    <div class="pgrid">
+
+      <div class="pcard reveal">
+        <div class="pcard-stripe"></div><div class="pcard-glow"></div>
+        <div class="pico pia">☀️</div>
+        <div class="ptitle">5 kW Solar PV System Design & Off-Grid Battery Storage</div>
+        <p class="pdesc">Complete PV array sizing using PVGIS irradiance data. Designed a 23.04 kWh battery storage stack and simulated a full H-Bridge inverter in PLECS with sub-1% error.</p>
+        <div class="ptags"><span class="ptag hl">PLECS</span><span class="ptag hl">PVGIS</span><span class="ptag">PV Sizing</span><span class="ptag">Battery Stack</span><span class="ptag">H-Bridge</span></div>
+        <div class="pnums">
+          <div><div class="pnv">36.6kWh</div><div class="pnl">Daily demand met</div></div>
+          <div><div class="pnv">&lt;1%</div><div class="pnl">Sim error</div></div>
+          <div><div class="pnv">550V</div><div class="pnl">Safe OCV limit</div></div>
+        </div>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-stripe"></div><div class="pcard-glow"></div>
+        <div class="pico pib">⚡</div>
+        <div class="ptitle">Distribution Network Analysis & Overvoltage Control</div>
+        <p class="pdesc">Analysed an 11-node 415V/50Hz radial network. Identified PV overvoltage conditions and configured Volt-VAr Q(U) and Volt-Watt P(V) control modes validated in PLECS.</p>
+        <div class="ptags"><span class="ptag hl">PLECS</span><span class="ptag">Volt-VAr Control</span><span class="ptag">Distributed Gen</span><span class="ptag">Grid Hosting</span></div>
+        <div class="pnums">
+          <div><div class="pnv">11-node</div><div class="pnl">Network modelled</div></div>
+          <div><div class="pnv">≤106%</div><div class="pnl">Voltage enforced</div></div>
+        </div>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-stripe"></div><div class="pcard-glow"></div>
+        <div class="pico pic">📈</div>
+        <div class="ptitle">UK Electricity Load Forecasting — Day-Ahead ML Model</div>
+        <p class="pdesc">Regression model on UK National Grid 2023 data across 48 half-hourly settlement periods. K-fold cross-validation, MSE/RMSE evaluation. Directly applicable to renewable grid balancing.</p>
+        <div class="ptags"><span class="ptag hl">Python</span><span class="ptag hl">Scikit-learn</span><span class="ptag">Time-Series</span><span class="ptag">Pandas</span><span class="ptag">Grid Balancing</span></div>
+        <div class="pnums">
+          <div><div class="pnv">48</div><div class="pnl">Periods/day</div></div>
+          <div><div class="pnv">k-fold</div><div class="pnl">Cross-validated</div></div>
+        </div>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="pcard-stripe"></div><div class="pcard-glow"></div>
+        <div class="pico pid">🤖</div>
+        <div class="ptitle">NLP Fault Classifier — Transformer Built from Scratch</div>
+        <p class="pdesc">Self-attention transformer built in PyTorch classifying factory fault descriptions into structured categories. Full ML pipeline: preprocessing, tokenisation, training and validation.</p>
+        <div class="ptags"><span class="ptag hl">PyTorch</span><span class="ptag hl">Transformer/NLP</span><span class="ptag">Self-Attention</span><span class="ptag">Fault Diagnostics</span></div>
+        <div class="pnums">
+          <div><div class="pnv">LLM</div><div class="pnl">Architecture</div></div>
+          <div><div class="pnv">3</div><div class="pnl">Output categories</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="eye reveal">Capabilities</div>
+    <h2 class="stitle reveal">Skills & Tools</h2>
+    <p class="ssub reveal">Engineering depth across power systems, data analytics, and AI — end-to-end.</p>
+    <div class="sgrid">
+      <div class="scard reveal">
+        <div class="shead"><div class="sico sia">☀️</div><div class="sname">Solar & Power Systems</div></div>
+        <div class="sbars">
+          <div><div class="srow"><span class="slbl">PLECS Simulation</span><span class="spct">90%</span></div><div class="bbg"><div class="bfill go" data-w="90%"></div></div></div>
+          <div><div class="srow"><span class="slbl">PV Sizing / PVGIS</span><span class="spct">85%</span></div><div class="bbg"><div class="bfill go" data-w="85%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Inverter & H-Bridge</span><span class="spct">80%</span></div><div class="bbg"><div class="bfill go" data-w="80%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Battery Storage</span><span class="spct">78%</span></div><div class="bbg"><div class="bfill go" data-w="78%"></div></div></div>
+        </div>
+      </div>
+      <div class="scard reveal">
+        <div class="shead"><div class="sico sib">📊</div><div class="sname">Data & Analytics</div></div>
+        <div class="sbars">
+          <div><div class="srow"><span class="slbl">Python</span><span class="spct">88%</span></div><div class="bbg"><div class="bfill" data-w="88%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Pandas / NumPy</span><span class="spct">85%</span></div><div class="bbg"><div class="bfill" data-w="85%"></div></div></div>
+          <div><div class="srow"><span class="slbl">MATLAB</span><span class="spct">82%</span></div><div class="bbg"><div class="bfill" data-w="82%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Scikit-learn / ML</span><span class="spct">80%</span></div><div class="bbg"><div class="bfill" data-w="80%"></div></div></div>
+        </div>
+      </div>
+      <div class="scard reveal">
+        <div class="shead"><div class="sico sic">🤖</div><div class="sname">AI & Machine Learning</div></div>
+        <div class="sbars">
+          <div><div class="srow"><span class="slbl">PyTorch</span><span class="spct">80%</span></div><div class="bbg"><div class="bfill" data-w="80%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Transformer / NLP</span><span class="spct">75%</span></div><div class="bbg"><div class="bfill" data-w="75%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Time-Series Forecasting</span><span class="spct">82%</span></div><div class="bbg"><div class="bfill" data-w="82%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Regression / k-fold CV</span><span class="spct">85%</span></div><div class="bbg"><div class="bfill" data-w="85%"></div></div></div>
+        </div>
+      </div>
+      <div class="scard reveal">
+        <div class="shead"><div class="sico sid">🔌</div><div class="sname">Embedded & Hardware</div></div>
+        <div class="sbars">
+          <div><div class="srow"><span class="slbl">Arduino / MCUs</span><span class="spct">88%</span></div><div class="bbg"><div class="bfill" data-w="88%"></div></div></div>
+          <div><div class="srow"><span class="slbl">VHDL / Verilog</span><span class="spct">72%</span></div><div class="bbg"><div class="bfill" data-w="72%"></div></div></div>
+          <div><div class="srow"><span class="slbl">PCB / Circuit Diagnostics</span><span class="spct">90%</span></div><div class="bbg"><div class="bfill" data-w="90%"></div></div></div>
+          <div><div class="srow"><span class="slbl">Oscilloscopes</span><span class="spct">92%</span></div><div class="bbg"><div class="bfill" data-w="92%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="ewrap">
+    <div class="eye reveal">Career</div>
+    <h2 class="stitle reveal">Experience</h2>
+    <p class="ssub reveal">From Bosch and Mercedes-Benz internships to 18 months of real-world electronic systems engineering.</p>
+    <div class="tl">
+      <div class="tlitem">
+        <div class="tldot"></div>
+        <div class="tltop"><div class="tlrole">Electronics Systems & Diagnostics Engineer</div><span class="tlbadge gr">Jan 2024 – Jun 2025</span></div>
+        <div class="tlorg">Rapid Info Solutions · Bangalore, India</div>
+        <ul class="tlul">
+          <li>92% first-attempt fix rate diagnosing complex faults at motherboard level — 95% fault isolation accuracy with oscilloscopes and multimeters.</li>
+          <li>Cut turnaround time by 20% using Agile workflows; reduced repeat repairs by 15% through root cause analysis and quality control.</li>
+          <li>Enhanced system performance by 40% through hardware upgrades — NVMe/SATA SSD, DDR4/DDR5, BIOS/firmware.</li>
+        </ul>
+      </div>
+      <div class="tlitem">
+        <div class="tldot go"></div>
+        <div class="tltop"><div class="tlrole">Electronics Engineering Intern — Door Display System</div><span class="tlbadge am">Apr – May 2023</span></div>
+        <div class="tlorg">Bosch TEF4 · Bangalore, India</div>
+        <ul class="tlul">
+          <li>Arduino-based door status alert system in Tinkercad — 30% better LED control efficiency, 95% button-state detection accuracy.</li>
+          <li>Embedded control logic skills directly applicable to solar MPPT and inverter control systems.</li>
+        </ul>
+      </div>
+      <div class="tlitem">
+        <div class="tldot go"></div>
+        <div class="tltop"><div class="tlrole">Engineering Intern — Intelligent Park Assist System</div><span class="tlbadge am">Sep – Nov 2022</span></div>
+        <div class="tlorg">Akshaya Motors (Mercedes-Benz) · Bangalore, India</div>
+        <ul class="tlul">
+          <li>Autonomous parking system achieving over 90% accuracy with less than 5 cm trajectory error.</li>
+          <li>Hands-on sensor fusion and real-time control logic — foundational to smart grid and energy management systems.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="cbar">
+    <div class="cleft reveal">
+      <h2>Ready to <span>connect?</span></h2>
+      <p>Open to graduate roles in renewable energy, power electronics &amp; energy data analytics.</p>
+    </div>
+    <div class="clinks reveal">
+      <a href="mailto:gagangowda155@gmail.com" class="cl cta">✉️ Email Me</a>
+      <a href="https://www.linkedin.com/in/gagangowda15" target="_blank" class="cl">💼 LinkedIn</a>
+      <a href="tel:+4407352665534" class="cl">📱 +44 07352 665534</a>
+      <span class="cl">📍 Nottingham, UK</span>
+    </div>
+  </div>
+</section>
+
+<footer><p>Designed &amp; built · <span>Gagan Gowda K L</span> · Nottingham, UK · 2026</p></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── BACKGROUND PARTICLE FIELD ── */
+(function(){
+  const c=document.getElementById('bg-canvas');
+  const r=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setSize(innerWidth,innerHeight);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);
+  cam.position.z=30;
+
+  // Particles
+  const N=2000, pos=new Float32Array(N*3), col=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*130;
+    pos[i*3+1]=(Math.random()-.5)*130;
+    pos[i*3+2]=(Math.random()-.5)*80;
+    const t=Math.random();
+    if(t<.5){col[i*3]=.18;col[i*3+1]=.8;col[i*3+2]=.53;}
+    else if(t<.8){col[i*3]=.96;col[i*3+1]=.65;col[i*3+2]=.14;}
+    else{col[i*3]=col[i*3+1]=col[i*3+2]=1;}
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  scene.add(new THREE.Points(geo,new THREE.PointsMaterial({size:.16,vertexColors:true,transparent:true,opacity:.65})));
+
+  // Wireframe spheres
+  const spheres=[];
+  for(let i=0;i<7;i++){
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(1.5+Math.random()*2,10,7),
+      new THREE.MeshBasicMaterial({color:0x2ecc87,wireframe:true,transparent:true,opacity:.06})
+    );
+    m.position.set((Math.random()-.5)*60,(Math.random()-.5)*60,(Math.random()-.5)*30);
+    m._rx=.002+Math.random()*.003; m._ry=.001+Math.random()*.002;
+    scene.add(m); spheres.push(m);
+  }
+
+  let mx=0,my=0,t=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*.4;my=(e.clientY/innerHeight-.5)*.3;});
+  window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();r.setSize(innerWidth,innerHeight);});
+
+  (function loop(){
+    requestAnimationFrame(loop); t+=.008;
+    cam.position.x+=(mx*3-cam.position.x)*.05;
+    cam.position.y+=(-my*3-cam.position.y)*.05;
+    cam.lookAt(scene.position);
+    spheres.forEach((s,i)=>{s.rotation.x+=s._rx;s.rotation.y+=s._ry;s.position.y+=Math.sin(t+i)*.007;});
+    r.render(scene,cam);
+  })();
+})();
+
+/* ── HERO 3D SOLAR SYSTEM ── */
+(function(){
+  const c=document.getElementById('hero-canvas');
+  if(!c)return;
+  const pw=c.parentElement.offsetWidth*.56, ph=c.parentElement.offsetHeight||innerHeight;
+  c.width=pw; c.height=ph;
+  const r=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));
+  r.setSize(pw,ph);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(50,pw/ph,.1,200);
+  cam.position.set(0,0,20);
+
+  scene.add(new THREE.AmbientLight(0xffffff,.25));
+  const sl=new THREE.PointLight(0xf5a623,4,60); sl.position.set(4,4,10); scene.add(sl);
+  const gl=new THREE.PointLight(0x2ecc87,2.5,45); gl.position.set(-7,-2,6); scene.add(gl);
+
+  // Sun
+  const sun=new THREE.Mesh(
+    new THREE.SphereGeometry(3.2,40,40),
+    new THREE.MeshPhongMaterial({color:0xf5a623,emissive:0xe87c1e,emissiveIntensity:.6,shininess:90})
+  );
+  scene.add(sun);
+
+  // Glow rings around sun
+  const rings=[];
+  for(let i=1;i<=5;i++){
+    const ring=new THREE.Mesh(
+      new THREE.TorusGeometry(3.2+i*.7,.035,8,64),
+      new THREE.MeshBasicMaterial({color:0xf5a623,transparent:true,opacity:.18-i*.025})
+    );
+    ring._phase=i*Math.PI*.4;
+    scene.add(ring); rings.push(ring);
+  }
+
+  // Orbiting solar panels
+  const panelMeshes=[];
+  [{r:6.5,spd:.5,sz:.9},{r:8.5,spd:.3,sz:.7},{r:11,spd:.18,sz:.6},{r:9.5,spd:-.22,sz:.75}].forEach((d,i)=>{
+    const mesh=new THREE.Mesh(
+      new THREE.BoxGeometry(d.sz*2.2,d.sz,.12),
+      new THREE.MeshPhongMaterial({color:0x0a3d2e,emissive:0x2ecc87,emissiveIntensity:.35,shininess:70})
+    );
+    mesh._d=d; mesh._ang=i*Math.PI*.5;
+    scene.add(mesh); panelMeshes.push(mesh);
+  });
+
+  // Data particles orbiting
+  const dparts=[];
+  for(let i=0;i<25;i++){
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(.07,6,6),
+      new THREE.MeshBasicMaterial({color:Math.random()<.5?0x2ecc87:0xf5a623,transparent:true,opacity:.9})
+    );
+    m._t=Math.random()*Math.PI*2;
+    m._r=4.5+Math.random()*9;
+    m._spd=(.3+Math.random()*.8)*(Math.random()<.5?1:-1);
+    m._vy=(Math.random()-.5)*8;
+    scene.add(m); dparts.push(m);
+  }
+
+  let t=0;
+  (function loop(){
+    requestAnimationFrame(loop); t+=.013;
+    sun.rotation.y=t*.25; sun.rotation.x=Math.sin(t*.18)*.08;
+    rings.forEach((ring,i)=>{ring.rotation.x=t*.18+ring._phase;ring.rotation.y=t*.1+ring._phase*.6;});
+    panelMeshes.forEach(p=>{
+      p._ang+=p._d.spd*.011;
+      p.position.x=Math.cos(p._ang)*p._d.r;
+      p.position.y=Math.sin(p._ang*.55)*2.2;
+      p.position.z=Math.sin(p._ang)*p._d.r*.28;
+      p.lookAt(sun.position);
+    });
+    dparts.forEach(dp=>{
+      dp._t+=dp._spd*.014;
+      dp.position.x=Math.cos(dp._t)*dp._r;
+      dp.position.y=dp._vy*.1+Math.sin(dp._t*1.4)*1.8;
+      dp.position.z=Math.sin(dp._t)*dp._r*.45;
+    });
+    sl.position.x=Math.cos(t*.45)*9;
+    sl.position.z=Math.sin(t*.45)*9;
+    r.render(scene,cam);
+  })();
+
+  window.addEventListener('resize',()=>{
+    const nw=c.parentElement.offsetWidth*.56, nh=c.parentElement.offsetHeight||innerHeight;
+    r.setSize(nw,nh); cam.aspect=nw/nh; cam.updateProjectionMatrix();
+  });
+})();
+
+/* ── CARD 3D TILT ── */
+document.querySelectorAll('.pcard').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const b=card.getBoundingClientRect();
+    const x=(e.clientX-b.left)/b.width-.5;
+    const y=(e.clientY-b.top)/b.height-.5;
+    card.style.transform=`perspective(900px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateY(-12px)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='perspective(900px) rotateX(0) rotateY(0) translateY(0)';});
+});
+
+/* ── SCROLL REVEAL + SKILL BARS + TIMELINE ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(el=>{
+    if(el.isIntersecting){
+      el.target.classList.add('vis');
+      el.target.querySelectorAll('.bfill').forEach(b=>b.style.width=b.dataset.w);
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal,.tlitem').forEach(el=>io.observe(el));
+
+/* ── ACTIVE NAV ── */
+window.addEventListener('scroll',()=>{
+  const ids=['hero','about','projects','skills','experience','contact'];
+  let cur='';
+  ids.forEach(id=>{const el=document.getElementById(id);if(el&&scrollY>=el.offsetTop-130)cur=id;});
+  document.querySelectorAll('.nav-links a').forEach(a=>{a.style.color=a.getAttribute('href')==='#'+cur?'var(--gb)':'';});
+});
+</script>
+</body>
+</html>
